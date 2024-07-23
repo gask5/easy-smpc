@@ -65,6 +65,8 @@ public class UserProcess implements MessageListener {
     private ConnectionSettings  connectionSettings;
     /** Error flag */
     private boolean             stop    = false;
+    /** Data of the user */
+    private Participant self;
 
     /**
      * Creates a new instance
@@ -427,6 +429,15 @@ public class UserProcess implements MessageListener {
     protected void setModel(Study model) {
         this.model = model;
     }
+
+    /**
+     * Sets data of the user 
+     * 
+     * @param self
+     */
+    public void setSelfData(Participant self){
+        this.self = self;
+    }
     
     /**
      * Get connectionIMAPSettings
@@ -477,11 +488,14 @@ public class UserProcess implements MessageListener {
         
         // Is EasyBackend bus?
         try {
+            // Set test values if this.self is null
+            String name = (this.self != null && this.self.getName() != null) ? this.self.getName() : "Test Name";
+            String email = (this.self != null && this.self.getEmailAddress() != null) ? this.self.getEmailAddress() : "test@example.com";
             if (this.getConnectionSettings() instanceof ConnectionSettingsEasyBackend) {
                 return new BusEasyBackend(Resources.SIZE_THREADPOOL,
                                           getConnectionSettings().getCheckInterval(),
                                           ((ConnectionSettingsEasyBackend) getConnectionSettings()),
-                                          new Participant(model.getParticipantFromId(model.getOwnId()).name, model.getParticipantFromId(model.getOwnId()).emailAddress),
+                                          new Participant(name, email),
                                           getConnectionSettings().getMaxMessageSize());
             }
         } catch (BusException e) {

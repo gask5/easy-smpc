@@ -58,6 +58,7 @@ public class UserProcessParticipating extends UserProcess {
                                     ConnectionSettings connectionSettings) {
         // Store
         super(connectionSettings);
+        this.setSelfData(participant);
         this.data = data;
         
         // Delete pre-existing bus messages
